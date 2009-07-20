@@ -32,7 +32,11 @@ arg_esc_subs = {
 
 def arg_esc(s):
     """escape an argument for a shell command"""
-    return "'" + multi_sub(arg_esc_subs, s) + "'"
+    for i in range(len(s)):
+        if s[i] in (' ', "'", '"', ';', '#', '&', '`', '\\', '!', '*', '?', '$',
+                '(', '{', '[', '>', '<', '|', '~', '^'):
+            return "'" + multi_sub(arg_esc_subs, s) + "'"
+    return s
 
 def args_esc(ss):
     """escape arguments for a shell command"""
