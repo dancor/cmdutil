@@ -33,7 +33,8 @@ arg_esc_subs = {
 def arg_esc(s):
     """escape an argument for a shell command"""
     for i in range(len(s)):
-        if s[i] in (' ', "'", '"', ';', '#', '&', '`', '\\', '!', '*', '?', '$',
+        if s[i] in (
+                ' ', "'", '"', ';', '#', '&', '`', '\\', '!', '*', '?', '$',
                 '(', '{', '[', '>', '<', '|', '~', '^'):
             return "'" + multi_sub(arg_esc_subs, s) + "'"
     return s
@@ -71,17 +72,17 @@ def cmd_output(cmd, can_fail=False):
     return [l[:-1] for l in ls]
 
 def are_you_sure(timeout=5, msg=""):
-    print "WARNING: YOU ARE PERFORMING A POTENTIALLY DANGEROUS ACTION"
+    print("WARNING: YOU ARE PERFORMING A POTENTIALLY DANGEROUS ACTION")
     if msg:
-        print
-        print msg
-        print
-    print "waiting " + str(timeout) + " seconds before continuing."
-    print "^C TO CANCEL"
+        print()
+        print(msg)
+        print()
+    print("waiting " + str(timeout) + " seconds before continuing.")
+    print("^C TO CANCEL")
     timeout_list = range(1, timeout + 1)
     timeout_list.reverse()
     for i in timeout_list:
-        print i
+        print(i)
         time.sleep(1)
 
 def try_rep(n, cmd):
@@ -90,11 +91,11 @@ def try_rep(n, cmd):
     """
     for i in xrange(n):
         if i > 0:
-            print >> sys.stderr, "retrying " + cmd
+            print("retrying " + cmd, file=sys.stderr)
         ret = spc.Popen(cmd, shell=True).wait()
         if ret == 0:
             return ret
-    print >> sys.stderr,  "***** FAILED ***** (with ret %d): %s" % (ret, cmd)
+    print("***** FAILED ***** (with ret %d): %s" % (ret, cmd), file=sys.stderr)
     return ret
 
 default_fanout = 5
@@ -112,9 +113,9 @@ def dsh(hosts, cmd, fanout=default_fanout, retry_num=default_retry_num):
 def dsh_fcn(hosts, cmd_fcn, fanout=default_fanout,
         retry_num=default_retry_num):
     """very generic form of dsh function"""
-    print "Runinng " + cu.arg_esc(cmd_fcn("<x>")) + ":" + \
+    print("Runinng " + cu.arg_esc(cmd_fcn("<x>")) + ":" + \
         "\n- with fanout " + str(fanout) + " and retry " + str(retry_num) + \
-        "\n- on <x> in " + str(hosts)
+        "\n- on <x> in " + str(hosts))
 
     fanout_sema = thg.BoundedSemaphore(value=fanout)
 
