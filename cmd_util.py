@@ -46,7 +46,7 @@ def args_esc(ss):
 def error_out(s):
     raise Exception(s + " ..aborting!")
 
-def cmd_run(cmd, shell=True, stdout=None, stdin=None, stderr=None):
+def cmd_run(cmd, shell=True, stdout=None, stdin=None, stderr=None, env=None):
     """
     run a command, applying escaping properly on array.
     basically this does what Popen should do already
@@ -56,11 +56,12 @@ def cmd_run(cmd, shell=True, stdout=None, stdin=None, stderr=None):
     if type(cmd) == type([]):
         cmd = " ".join([arg_esc(a) for a in cmd])
     return spc.Popen(cmd, shell=shell, stdout=stdout, stdin=stdin,
-        stderr=stderr)
+        stderr=stderr, env=env)
 
-def cmd_wait(cmd, shell=True, stdout=None, stderr=None, can_fail=False):
+def cmd_wait(cmd, shell=True, stdout=None, stderr=None, can_fail=False,
+        env=None):
     """wait for a command to finish and return the subprocess object"""
-    p = cmd_run(cmd, shell=shell, stdout=stdout, stderr=stderr)
+    p = cmd_run(cmd, shell=shell, stdout=stdout, stderr=stderr, env=env)
     ret = p.wait()
     if not can_fail and ret != 0:
         error_out("got ret " + str(ret) + " from command:\n" + str(cmd))
